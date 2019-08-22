@@ -1,12 +1,14 @@
 package wpf.example.dubbo.bootorderconsumer.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wpf.dubbodemo.bean.UserAddress;
 import wpf.dubbodemo.service.OrderService;
 import wpf.dubbodemo.service.UserService;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,9 +22,12 @@ import java.util.List;
 class OrderServiceImpl implements OrderService {
 
     //@Autowired
-    @Reference  //远程引用服务
+    @Reference(loadbalance = "random")  //远程引用服务
+    //@Reference(url = "127.0.0.1:20880") //dubbo直连，不经过注册中心
     UserService userService;
 
+    //该方法出错了，就转向callAfterException方法进行容错处理。
+    @HystrixCommand(fallbackMethod = "callAfterException")
     @Override
     public List<UserAddress> initOrder(String userId) {
         System.out.println("用户id："+userId);
@@ -32,5 +37,9 @@ class OrderServiceImpl implements OrderService {
             System.out.println(userAddress.getUserAddress());
         }
         return addressList;
+    }
+
+    public List<UserAddress> callAfterException(String userId){
+        return Arrays.asList(new UserAddress(10,"测试",userId,"测试","测试","Y"));
     }
 }

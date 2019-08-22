@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
 import com.alibaba.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.ImportResource;
 
 /**
@@ -30,7 +31,10 @@ import org.springframework.context.annotation.ImportResource;
 //@ImportResource(locations = "classpath:provider.xml")
 
 //方式三：
-@DubboComponentScan(basePackages = "wpf.example.dubbo.bootuserprovider")
+//@DubboComponentScan(basePackages = "wpf.example.dubbo.bootuserprovider")
+
+@EnableDubbo
+@EnableHystrix  //开启服务容错
 @SpringBootApplication
 public class BootUserProviderApplication {
 

@@ -7,7 +7,7 @@ import wpf.dubbodemo.service.UserService;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 public class MyDubboConfig {
     //<dubbo:application name="boot-user-provider-ByConfigClass"></dubbo:application>
     @Bean
@@ -64,9 +64,9 @@ public class MyDubboConfig {
     }
 
     //<dubbo:monitor protocol="registry"></dubbo:monitor>
-    public MonitorConfig monitorConfig(){
-        return null;
-    }
+//    public MonitorConfig monitorConfig(){
+//        return null;
+//    }
 
     //<dubbo:provider timeout="1000"></dubbo:provider>
     @Bean
