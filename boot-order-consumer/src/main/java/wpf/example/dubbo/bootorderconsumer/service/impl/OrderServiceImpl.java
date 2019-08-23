@@ -22,8 +22,11 @@ import java.util.List;
 class OrderServiceImpl implements OrderService {
 
     //@Autowired
-    @Reference(loadbalance = "random")  //远程引用服务
+    @Reference  //远程引用服务
+    //@Reference(loadbalance = "random")  //设置负载均衡机制（四种）
+    //@Reference(mock="fail" /* mock = force */)  //服务降级，这个一般是通过zookeeper设置，这里写死不好
     //@Reference(url = "127.0.0.1:20880") //dubbo直连，不经过注册中心
+    //@Reference(cluster="failsafe") //集群容错
     UserService userService;
 
     //该方法出错了，就转向callAfterException方法进行容错处理。
