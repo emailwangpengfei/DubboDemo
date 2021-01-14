@@ -2,6 +2,7 @@ package wpf.example.dubbo.bootorderconsumer.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wpf.dubbodemo.bean.UserAddress;
@@ -30,7 +31,12 @@ class OrderServiceImpl implements OrderService {
     UserService userService;
 
     //该方法出错了，就转向callAfterException方法进行容错处理。
-    @HystrixCommand(fallbackMethod = "callAfterException")
+    @HystrixCommand(fallbackMethod = "callAfterException",
+        commandProperties = {
+            //回调方法的最大并发度，默认是10
+            @HystrixProperty(name="fallback.isolation.semaphore.maxConcurrentRequests",value = "50")
+        }
+    )
     @Override
     public List<UserAddress> initOrder(String userId) {
         System.out.println("用户id："+userId);
@@ -43,6 +49,7 @@ class OrderServiceImpl implements OrderService {
     }
 
     public List<UserAddress> callAfterException(String userId){
+        System.out.println("********fallbackMethod was called********");
         return Arrays.asList(new UserAddress(10,"测试",userId,"测试","测试","Y"));
     }
 }
